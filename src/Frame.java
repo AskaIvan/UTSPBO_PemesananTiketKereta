@@ -1,11 +1,13 @@
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -209,6 +211,11 @@ public class Frame extends javax.swing.JFrame {
         });
 
         print.setText("Print");
+        print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printActionPerformed(evt);
+            }
+        });
 
         print1.setText("Refresh");
         print1.addActionListener(new java.awt.event.ActionListener() {
@@ -423,13 +430,13 @@ public class Frame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int baris = tblData.getSelectedRow();
         if (baris!=-1) {
-            String NIS = tblData.getValueAt(baris, 0).toString();
-            String SQL = "DELETE FROM pesanan WHERE ktpsim ='"+id+"'";
+            String idnya = tblData.getValueAt(baris, 0).toString();
+            String SQL = "DELETE FROM pesanan WHERE ktpsim ='"+idnya+"'";
             int status = KonekDB.execute(SQL);
             if (status==1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil dihapus","Sukses", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan","Gagal",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Data gagal dihapus","Gagal",JOptionPane.WARNING_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Pilih baris data terlebih dahulu","Error",JOptionPane.WARNING_MESSAGE);
@@ -456,6 +463,17 @@ public class Frame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Pilih Jenis Kereta","Gagal",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jnskeretaActionPerformed
+
+    private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
+        // TODO add your handling code here:
+        MessageFormat header = new MessageFormat("Daftar Pemesanan Tiket");
+        MessageFormat footer = new MessageFormat("Page {0,number,integer}     ");
+        try {
+            tblData.print(JTable.PrintMode.FIT_WIDTH, header, footer, true, null, true, null);
+        } catch (Exception e) {
+            System.err.format("Cannot Print %s%n",e.getMessage());
+        }
+    }//GEN-LAST:event_printActionPerformed
 
     /**
      * @param args the command line arguments
